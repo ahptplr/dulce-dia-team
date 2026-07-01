@@ -6,6 +6,9 @@
     <title>Dulce Dia - Team Reveal</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manjari:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #fff; margin: 0; padding: 20px; text-align: center; }
@@ -14,6 +17,9 @@
         .btn-proj { background: #0284c7; }
         .btn-kiosk { background: #16a34a; }
         .btn-admin { background: #dc2626; }
+        body {
+        font-family: 'Manjari', sans-serif;
+        }
         
         .container { display: flex; justify-content: space-around; gap: 20px; margin-top: 20px; }
         .team-box { flex: 1; background: #1e293b; border-radius: 12px; padding: 20px; min-height: 550px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); border: 1px solid #334155; }
@@ -22,9 +28,15 @@
         .team-b-h { color: #3b82f6; border-color: #3b82f6 !important; }
         .team-c-h { color: #10b981; border-color: #10b981 !important; }
         
-        .member-list { list-style: none; padding: 0; text-align: left; max-height: 500px; overflow-y: auto; }
-        .member-list li { background: #334155; padding: 10px 15px; margin: 6px 0; border-radius: 6px; display: flex; justify-content: space-between; animation: fadeIn 0.5s ease-in-out; font-size: 1.1em; }
-        .class-tag { background: #475569; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; color: #cbd5e1; }
+       /* --- ഇതിൽ നിന്ന് താഴെ ഉള്ളത് മാറ്റുക --- */
+        .member-list { list-style: none; padding: 0; text-align: left; } /* max-height, overflow എന്നിവ ഒഴിവാക്കി */
+        .member-list li { background: #334155; padding: 4px 10px; margin: 3px 0; border-radius: 4px; display: flex; justify-content: space-between; animation: fadeIn 0.5s ease-in-out; font-size: 0.85em; } /* padding ഉം font-size ഉം കുറച്ചു */
+        .class-tag { background: #475569; padding: 1px 6px; border-radius: 3px; font-size: 0.75em; color: #cbd5e1; }
+        
+        /* പുതിയ കിയോസ്ക് ബട്ടണുകൾക്കുള്ള ഡിസൈൻ */
+        .grid-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; margin-bottom: 20px; }
+        .opt-btn { padding: 12px 18px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; cursor: pointer; font-size: 1.1em; transition: 0.2s; flex-grow: 1; text-align: center; font-weight: bold; }
+        .opt-btn.selected { background: #38bdf8; color: #000; border-color: #38bdf8; transform: scale(1.05); }
         
         .leader { background: #e11d48 !important; font-weight: bold; border: 2px solid #fff; }
         .asst-leader { background: #d97706 !important; font-weight: bold; border: 2px solid #fff; }
@@ -52,12 +64,12 @@
 
     <div id="view-selector">
         <h2>DULCE DIA - SETUP MENU</h2>
-        <p>ഏത് സ്ക്രീനാണോ സെറ്റ് ചെയ്യേണ്ടത് അത് സെലക്ട് ചെയ്യുക:</p>
+        <p>Select the Screen:</p>
         <button class="btn-mode btn-proj" onclick="initProjector()">Projector View (Laptop)</button>
         <button class="btn-mode btn-kiosk" onclick="initKiosk()">Kiosk View (Android Kiosk)</button>
         <button class="btn-mode btn-admin" onclick="initAdmin()">Admin View (To Select Leaders)</button>
         <br><br>
-        <button style="width: auto; background: #475569; border: none;" onclick="uploadInitialData()">ഇവിടെ ഒരു തവണ ക്ലിക്ക് ചെയ്ത് ഒഫീഷ്യൽ ലിസ്റ്റ് അപ്‌ലോഡ് ചെയ്യുക</button>
+        <button style="width: auto; background: #475569; border: none;" onclick="uploadInitialData()">Please click here one time to upload official list</button>
     </div>
 
     <div id="projector-view" class="hidden">
@@ -85,36 +97,28 @@
     </div>
 
     <div id="kiosk-view" class="hidden">
-        <div class="kiosk-form">
-            <h2>Dulce Dia - Enter Details</h2>
-            <label>ക്ലാസ് സെലക്ട് ചെയ്യുക (Select Class):</label>
-            <select id="kiosk-class" onchange="updateRollNumbers()">
-                <option value="">-- Select Class --</option>
-                <option value="S5">S5</option>
-                <option value="S6">S6</option>
-                <option value="S7">S7</option>
-                <option value="S8">S8</option>
-                <option value="S9">S9</option>
-                <option value="S10">S10</option>
-                <option value="i1">i1</option>
-            </select>
+        <div class="kiosk-form" style="max-width: 600px;">
+            <h2>Dulce Dia - Select Details</h2>
             
-            <label>റോൾ നമ്പർ സെലക്ട് ചെയ്യുക (Select Roll No):</label>
-            <select id="kiosk-roll">
-                <option value="">-- Select Roll No --</option>
-            </select>
+            <label>1. Select Your Class:</label>
+            <div id="class-buttons" class="grid-btns"></div>
             
-            <button class="btn-submit" onclick="submitKiosk()">REVEAL MY TEAM 🎉</button>
+            <label>2. Select Your Roll No:</label>
+            <div id="roll-buttons" class="grid-btns">
+                <p style="color:#64748b; font-size:0.9em;">(Please select a class first)</p>
+            </div>
+            
+            <button id="reveal-btn" class="btn-submit" style="display:none;" onclick="submitKiosk()">REVEAL MY TEAM 🎉</button>
         </div>
     </div>
 
     <div id="admin-view" class="hidden">
         <div class="kiosk-form" style="max-width: 550px;">
             <h2>Assign Leader & Assistant Leader</h2>
-            <label>വിദ്യാർത്ഥിയുടെ പേര്:</label>
+            <label>Student's Name:</label>
             <select id="admin-student-select"><option value="">-- Select Student --</option></select>
             
-            <label>സ്ഥാനം (Role):</label>
+            <label>Student's Role:</label>
             <select id="admin-role-select">
                 <option value="Leader">Team Leader</option>
                 <option value="Asst-Leader">Assistant Leader</option>
@@ -141,143 +145,143 @@
         // --- 100% ACCURATE OFFICIAL ROLL NUMBERS & TEAMS ---
         const studentsData = [
             // S5 CLASS
-            {id:1, class:"S5", roll:1, name:"അബ്ദുല്ല ശാകിർ", team:"B", status:"hidden", role:"Member"},
-            {id:2, class:"S5", roll:2, name:"മുഫീദ് കെ പി", team:"B", status:"hidden", role:"Member"},
-            {id:3, class:"S5", roll:3, name:"ഫാളിൽ", team:"A", status:"hidden", role:"Member"},
-            {id:4, class:"S5", roll:4, name:"ഫിറാസ്", team:"A", status:"hidden", role:"Member"},
-            {id:5, class:"S5", roll:5, name:"മുഹമ്മദ് ഇബ്റാഹീം", team:"B", status:"hidden", role:"Member"},
-            {id:6, class:"S5", roll:6, name:"മുഹമ്മദ് സി പി", team:"C", status:"hidden", role:"Member"},
-            {id:7, class:"S5", roll:7, name:"മിസ്ബാഹ്", team:"C", status:"hidden", role:"Member"},
-            {id:8, class:"S5", roll:8, name:"മുഹമ്മദ് മുസ്തഫ", team:"B", status:"hidden", role:"Member"},
-            {id:9, class:"S5", roll:9, name:"നസീഹ്", team:"A", status:"hidden", role:"Member"},
-            {id:10, class:"S5", roll:10, name:"മുഹമ്മദ് ഒ സി", team:"B", status:"hidden", role:"Member"},
-            {id:11, class:"S5", roll:11, name:"സഫ്വാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:12, class:"S5", roll:12, name:"ശാൻ ടി പി", team:"C", status:"hidden", role:"Member"},
-            {id:13, class:"S5", roll:13, name:"സിനാൻ സി", team:"C", status:"hidden", role:"Member"},
-            {id:14, class:"S5", roll:14, name:"സിനാൻ സി കെ", team:"B", status:"hidden", role:"Member"},
-            {id:15, class:"S5", roll:15, name:"ത്വയ്യിബ്", team:"A", status:"hidden", role:"Member"},
-            {id:16, class:"S5", roll:16, name:"സിനാൻ കെ", team:"C", status:"hidden", role:"Member"},
-            {id:17, class:"S5", roll:17, name:"ഉനൈസ് ടി സി", team:"A", status:"hidden", role:"Member"},
+            {id:1, class:"S5", roll:1, name:"Abdulla Shakir T M", team:"B", status:"hidden", role:"Member"},
+            {id:2, class:"S5", roll:2, name:"Mufeed K P", team:"B", status:"hidden", role:"Member"},
+            {id:3, class:"S5", roll:3, name:"Muhammed Fazil M", team:"A", status:"hidden", role:"Member"},
+            {id:4, class:"S5", roll:4, name:"Muhammed Firas P", team:"A", status:"hidden", role:"Member"},
+            {id:5, class:"S5", roll:5, name:"Muhammed Ibrahim M", team:"B", status:"hidden", role:"Member"},
+            {id:6, class:"S5", roll:6, name:"Muhammed C P", team:"C", status:"hidden", role:"Member"},
+            {id:7, class:"S5", roll:7, name:"Muhammed Misbah A", team:"C", status:"hidden", role:"Member"},
+            {id:8, class:"S5", roll:8, name:"Muhammed Musthafa M", team:"B", status:"hidden", role:"Member"},
+            {id:9, class:"S5", roll:9, name:"Muhammed Naseeh A K", team:"A", status:"hidden", role:"Member"},
+            {id:10, class:"S5", roll:10, name:"Muhammed O C", team:"B", status:"hidden", role:"Member"},
+            {id:11, class:"S5", roll:11, name:"Muhammed Safwan N P", team:"C", status:"hidden", role:"Member"},
+            {id:12, class:"S5", roll:12, name:"Muhammed Shan T P", team:"C", status:"hidden", role:"Member"},
+            {id:13, class:"S5", roll:13, name:"Muhammed Sinan C", team:"C", status:"hidden", role:"Member"},
+            {id:14, class:"S5", roll:14, name:"Muhammed Sinan C K", team:"B", status:"hidden", role:"Member"},
+            {id:15, class:"S5", roll:15, name:"Muhammed Thayyib", team:"A", status:"hidden", role:"Member"},
+            {id:16, class:"S5", roll:16, name:"Sinan K", team:"C", status:"hidden", role:"Member"},
+            {id:17, class:"S5", roll:17, name:"Muhammed Unais T C", team:"A", status:"hidden", role:"Member"},
 
             // S6 CLASS
-            {id:18, class:"S6", roll:1, name:"അബ്ദുറഹ്മാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:19, class:"S6", roll:2, name:"അബൂബക്കർ സിദ്ദീഖ്", team:"A", status:"hidden", role:"Member"},
-            {id:20, class:"S6", roll:3, name:"അഫ്ലഹ് കെ", team:"A", status:"hidden", role:"Member"},
-            {id:21, class:"S6", roll:4, name:"അസീദ്", team:"A", status:"hidden", role:"Member"},
-            {id:22, class:"S6", roll:5, name:"ആശിഖ്", team:"C", status:"hidden", role:"Leader"},
-            {id:23, class:"S6", roll:6, name:"ബശ്ശാർ", team:"B", status:"hidden", role:"Member"},
-            {id:24, class:"S6", roll:7, name:"നാഫിഅ്", team:"B", status:"hidden", role:"Leader"},
-            {id:25, class:"S6", roll:8, name:"അൻശദ്", team:"A", status:"hidden", role:"Member"},
-            {id:26, class:"S6", roll:9, name:"ഹനാൻ", team:"A", status:"hidden", role:"Leader"},
-            {id:27, class:"S6", roll:10, name:"മിസ്അബ്", team:"C", status:"hidden", role:"Member"},
-            {id:28, class:"S6", roll:11, name:"മുഹ്സിൻ", team:"B", status:"hidden", role:"Member"},
-            {id:29, class:"S6", roll:12, name:"മുസമ്മിൽ", team:"C", status:"hidden", role:"Member"},
-            {id:30, class:"S6", roll:13, name:"ശാമിൽ", team:"B", status:"hidden", role:"Member"},
+            {id:18, class:"S6", roll:1, name:"Abdurahman K", team:"C", status:"hidden", role:"Member"},
+            {id:19, class:"S6", roll:2, name:"Aboobacker Sidheeque C H", team:"A", status:"hidden", role:"Member"},
+            {id:20, class:"S6", roll:3, name:"Aflah K", team:"A", status:"hidden", role:"Member"},
+            {id:21, class:"S6", roll:4, name:"Muhammed Aseed P V", team:"A", status:"hidden", role:"Member"},
+            {id:22, class:"S6", roll:5, name:"Ashiq Muhammed Ashraf", team:"C", status:"hidden", role:"Leader"},
+            {id:23, class:"S6", roll:6, name:"C H Muhammed Basshar", team:"B", status:"hidden", role:"Member"},
+            {id:24, class:"S6", roll:7, name:"Muhammed Abdu Nafih E P", team:"B", status:"hidden", role:"Leader"},
+            {id:25, class:"S6", roll:8, name:"Muhammed Anshad P M", team:"A", status:"hidden", role:"Member"},
+            {id:26, class:"S6", roll:9, name:"Muhammed Hanan M", team:"A", status:"hidden", role:"Leader"},
+            {id:27, class:"S6", roll:10, name:"Muhammed Misab T K", team:"C", status:"hidden", role:"Member"},
+            {id:28, class:"S6", roll:11, name:"Muhammed Muhsin P", team:"B", status:"hidden", role:"Member"},
+            {id:29, class:"S6", roll:12, name:"Muzammil K", team:"C", status:"hidden", role:"Member"},
+            {id:30, class:"S6", roll:13, name:"Shamil K", team:"B", status:"hidden", role:"Member"},
 
             // S7 CLASS
-            {id:31, class:"S7", roll:1, name:"അബ്ദുൽ ജവാദ്", team:"C", status:"hidden", role:"Member"},
-            {id:32, class:"S7", roll:2, name:"അഹ്മദ്", team:"A", status:"hidden", role:"Member"},
-            {id:33, class:"S7", roll:3, name:"ഹംദാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:34, class:"S7", roll:4, name:"മുഈനുദ്ദീൻ", team:"A", status:"hidden", role:"Member"},
-            {id:35, class:"S7", roll:5, name:"നുഫൈസ്", team:"B", status:"hidden", role:"Member"},
-            {id:36, class:"S7", roll:6, name:"റസീൻ", team:"A", status:"hidden", role:"Member"},
-            {id:37, class:"S7", roll:7, name:"അബ്ദുല്ല കെ稳വി", team:"B", status:"hidden", role:"Member"},
-            {id:38, class:"S7", roll:8, name:"അജ്മൽ", team:"C", status:"hidden", role:"Member"},
-            {id:39, class:"S7", roll:9, name:"ഫർഹാൻ", team:"A", status:"hidden", role:"Member"},
-            {id:40, class:"S7", roll:10, name:"ജാസിം", team:"A", status:"hidden", role:"Member"},
-            {id:41, class:"S7", roll:11, name:"റിഹാൻ റാഷിദ്", team:"C", status:"hidden", role:"Member"},
-            {id:42, class:"S7", roll:12, name:"ശമ്മാസ്", team:"A", status:"hidden", role:"Member"},
-            {id:43, class:"S7", roll:13, name:"സാലിഹ് പി കെ", team:"B", status:"hidden", role:"Member"},
-            {id:44, class:"S7", roll:14, name:"മുഹമ്മദ് വി പി", team:"C", status:"hidden", role:"Member"},
-            {id:45, class:"S7", roll:15, name:"സഹീം", team:"C", status:"hidden", role:"Member"},
-            {id:46, class:"S7", roll:16, name:"സൈഫിയ്യ്", team:"B", status:"hidden", role:"Member"},
-            {id:47, class:"S7", roll:17, name:"സയ്യിദ് അദ്നാൻ", team:"B", status:"hidden", role:"Member"},
-            {id:48, class:"S7", roll:18, name:"സയ്യിദ് മുഹമ്മദ്", team:"B", status:"hidden", role:"Member"},
-            {id:49, class:"S7", roll:19, name:"ശസിൻ", team:"C", status:"hidden", role:"Member"},
+            {id:31, class:"S7", roll:1, name:"Abdul Javad Jafar O", team:"C", status:"hidden", role:"Member"},
+            {id:32, class:"S7", roll:2, name:"Ahmad A", team:"A", status:"hidden", role:"Member"},
+            {id:33, class:"S7", roll:3, name:"Hamdan P T P", team:"C", status:"hidden", role:"Member"},
+            {id:34, class:"S7", roll:4, name:"Muhammad Mueenudheen P V", team:"A", status:"hidden", role:"Member"},
+            {id:35, class:"S7", roll:5, name:"Muhammad Nufais K P", team:"B", status:"hidden", role:"Member"},
+            {id:36, class:"S7", roll:6, name:"Muhammad Razeen N P", team:"A", status:"hidden", role:"Member"},
+            {id:37, class:"S7", roll:7, name:"Muhammed Abdulla K V", team:"B", status:"hidden", role:"Member"},
+            {id:38, class:"S7", roll:8, name:"Muhammed Ajmal K", team:"C", status:"hidden", role:"Member"},
+            {id:39, class:"S7", roll:9, name:"Muhammed Farhan", team:"A", status:"hidden", role:"Member"},
+            {id:40, class:"S7", roll:10, name:"Muhammed Jasim", team:"A", status:"hidden", role:"Member"},
+            {id:41, class:"S7", roll:11, name:"Muhammed Rihan Rashid ", team:"C", status:"hidden", role:"Member"},
+            {id:42, class:"S7", roll:12, name:"Muhammed Shammas", team:"A", status:"hidden", role:"Member"},
+            {id:43, class:"S7", roll:13, name:"Muhammed Swalih P K", team:"B", status:"hidden", role:"Member"},
+            {id:44, class:"S7", roll:14, name:"Muhammed V P", team:"C", status:"hidden", role:"Member"},
+            {id:45, class:"S7", roll:15, name:"Muhammed Zaheem T P", team:"C", status:"hidden", role:"Member"},
+            {id:46, class:"S7", roll:16, name:"Saifiyy Ashraf C ", team:"B", status:"hidden", role:"Member"},
+            {id:47, class:"S7", roll:17, name:"Sayed Adnan Ba Hassan", team:"B", status:"hidden", role:"Member"},
+            {id:48, class:"S7", roll:18, name:"Sayyid Muhammad", team:"B", status:"hidden", role:"Member"},
+            {id:49, class:"S7", roll:19, name:"Shezin Muhammed Ali", team:"C", status:"hidden", role:"Member"},
 
             // S8 CLASS
-            {id:50, class:"S8", roll:1, name:"അബ്ദുൽ ഖാദിർ", team:"C", status:"hidden", role:"Asst-Leader"},
-            {id:51, class:"S8", roll:2, name:"അമൻ ഹാദി", team:"A", status:"hidden", role:"Member"},
-            {id:52, class:"S8", roll:3, name:"നബ്ഹാൻ ടി", team:"A", status:"hidden", role:"Member"},
-            {id:53, class:"S8", roll:4, name:"ഹബീബ്", team:"B", status:"hidden", role:"Member"},
-            {id:54, class:"S8", roll:5, name:"നബ്ഹാൻ പി കെ", team:"B", status:"hidden", role:"Member"},
-            {id:55, class:"S8", roll:6, name:"റാസി", team:"B", status:"hidden", role:"Asst-Leader"},
-            {id:56, class:"S8", roll:7, name:"റബാഹ്", team:"C", status:"hidden", role:"Member"},
-            {id:57, class:"S8", roll:8, name:"അദ്നാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:58, class:"S8", roll:9, name:"അമീൻ", team:"A", status:"hidden", role:"Member"},
-            {id:59, class:"S8", roll:10, name:"അസാം ശഹ്രൂസ്", team:"B", status:"hidden", role:"Member"},
-            {id:60, class:"S8", roll:11, name:"ജസീം", team:"A", status:"hidden", role:"Member"},
-            {id:61, class:"S8", roll:12, name:"മിസ്വർ", team:"C", status:"hidden", role:"Member"},
-            {id:62, class:"S8", roll:13, name:"സാബിത്", team:"A", status:"hidden", role:"Asst-Leader"},
-            {id:63, class:"S8", roll:14, name:"శిబ్ల్", team:"C", status:"hidden", role:"Member"},
-            {id:64, class:"S8", roll:15, name:"സബീഹ്", team:"C", status:"hidden", role:"Member"},
+            {id:50, class:"S8", roll:1, name:"Abdil Qadir K", team:"C", status:"hidden", role:"Asst-Leader"},
+            {id:51, class:"S8", roll:2, name:"Aman Hadi K K", team:"A", status:"hidden", role:"Member"},
+            {id:52, class:"S8", roll:3, name:"Mohammed Nabhan T", team:"A", status:"hidden", role:"Member"},
+            {id:53, class:"S8", roll:4, name:"Muhammad Habeeb", team:"B", status:"hidden", role:"Member"},
+            {id:54, class:"S8", roll:5, name:"Muhammad Nabhan P K", team:"B", status:"hidden", role:"Member"},
+            {id:55, class:"S8", roll:6, name:"Muhammad Raazi Basheer", team:"B", status:"hidden", role:"Asst-Leader"},
+            {id:56, class:"S8", roll:7, name:"Muhammad Rabaah C P", team:"C", status:"hidden", role:"Member"},
+            {id:57, class:"S8", roll:8, name:"Muhammed Adnan P H", team:"C", status:"hidden", role:"Member"},
+            {id:58, class:"S8", roll:9, name:"Muhammed Ameen Ubaib", team:"A", status:"hidden", role:"Member"},
+            {id:59, class:"S8", roll:10, name:"Muhammed Azaam Shahrooz", team:"B", status:"hidden", role:"Member"},
+            {id:60, class:"S8", roll:11, name:"Muhammed Jaseem M", team:"A", status:"hidden", role:"Member"},
+            {id:61, class:"S8", roll:12, name:"Muhammed Misvar K V", team:"C", status:"hidden", role:"Member"},
+            {id:62, class:"S8", roll:13, name:"Muhammed Sabith K P", team:"A", status:"hidden", role:"Asst-Leader"},
+            {id:63, class:"S8", roll:14, name:"Muhammed Shibil M", team:"C", status:"hidden", role:"Member"},
+            {id:64, class:"S8", roll:15, name:"Muhammed Swabeeh V A", team:"C", status:"hidden", role:"Member"},
 
             // S9 CLASS
-            {id:65, class:"S9", roll:1, name:"അബ്ദുറഹ്മാൻ", team:"B", status:"hidden", role:"Member"},
-            {id:66, class:"S9", roll:2, name:"ഹാനി", team:"B", status:"hidden", role:"Member"},
-            {id:67, class:"S9", roll:3, name:"ഹിലാൽ", team:"B", status:"hidden", role:"Member"},
-            {id:68, class:"S9", roll:4, name:"മഹ്മൂദ്", team:"C", status:"hidden", role:"Member"},
-            {id:69, class:"S9", roll:5, name:"മിസ്ബാഹ്", team:"C", status:"hidden", role:"Member"},
-            {id:70, class:"S9", roll:6, name:"മുഹമ്മദ് യു വി", team:"B", status:"hidden", role:"Member"},
-            {id:71, class:"S9", roll:7, name:"അബൂബക്കർ", team:"A", status:"hidden", role:"Member"},
-            {id:72, class:"S9", roll:8, name:"ആസിം", team:"A", status:"hidden", role:"Member"},
-            {id:73, class:"S9", roll:9, name:"മുഹമ്മദ് ബിൻ അബ്ദില്ല", team:"A", status:"hidden", role:"Member"},
-            {id:74, class:"S9", roll:10, name:"ഫാഇസ്", team:"C", status:"hidden", role:"Member"},
-            {id:75, class:"S9", roll:11, name:"റബീഅ്", team:"B", status:"hidden", role:"Member"},
-            {id:76, class:"S9", roll:12, name:"റൈഹാൻ", team:"A", status:"hidden", role:"Member"},
-            {id:77, class:"S9", roll:13, name:"സഫ്വാൻ", team:"A", status:"hidden", role:"Member"},
-            {id:78, class:"S9", roll:14, name:"മുൻദിർ", team:"B", status:"hidden", role:"Member"},
-            {id:79, class:"S9", roll:15, name:"തമീം", team:"B", status:"hidden", role:"Member"},
-            {id:80, class:"S9", roll:16, name:"സഹൽ", team:"A", status:"hidden", role:"Member"},
-            {id:81, class:"S9", roll:17, name:"ഉസ്മാൻ", team:"C", status:"hidden", role:"Member"},
+            {id:65, class:"S9", roll:1, name:"Abdu Rahman", team:"B", status:"hidden", role:"Member"},
+            {id:66, class:"S9", roll:2, name:"Hani Muhammed", team:"B", status:"hidden", role:"Member"},
+            {id:67, class:"S9", roll:3, name:"Hilal Muhammed M", team:"B", status:"hidden", role:"Member"},
+            {id:68, class:"S9", roll:4, name:"Mahamood V", team:"C", status:"hidden", role:"Member"},
+            {id:69, class:"S9", roll:5, name:"Muhammad Misbah", team:"C", status:"hidden", role:"Member"},
+            {id:70, class:"S9", roll:6, name:"Muhammed Abdul Fathah", team:"B", status:"hidden", role:"Member"},
+            {id:71, class:"S9", roll:7, name:"Muhammed Aboobacker", team:"A", status:"hidden", role:"Member"},
+            {id:72, class:"S9", roll:8, name:"Muhammed Aswim K P", team:"A", status:"hidden", role:"Member"},
+            {id:73, class:"S9", roll:9, name:"Muhammed Bin Abdulla", team:"A", status:"hidden", role:"Member"},
+            {id:74, class:"S9", roll:10, name:"Muhammed Fayiz P P", team:"C", status:"hidden", role:"Member"},
+            {id:75, class:"S9", roll:11, name:"Muhammed Rabeeh A P", team:"B", status:"hidden", role:"Member"},
+            {id:76, class:"S9", roll:12, name:"Muhammed Raihan C K", team:"A", status:"hidden", role:"Member"},
+            {id:77, class:"S9", roll:13, name:"Muhammed Safwan P C", team:"A", status:"hidden", role:"Member"},
+            {id:78, class:"S9", roll:14, name:"Munzir Ahmad N K", team:"B", status:"hidden", role:"Member"},
+            {id:79, class:"S9", roll:15, name:"N P Thameem", team:"B", status:"hidden", role:"Member"},
+            {id:80, class:"S9", roll:16, name:"Sahal K", team:"A", status:"hidden", role:"Member"},
+            {id:81, class:"S9", roll:17, name:"Usman K P", team:"C", status:"hidden", role:"Member"},
 
             // S10 CLASS
-            {id:82, class:"S10", roll:1, name:"മിഖ്ദാദ്", team:"C", status:"hidden", role:"Member"},
-            {id:83, class:"S10", roll:2, name:"ഫഹദ് മുസ്തഫ", team:"A", status:"hidden", role:"Member"},
-            {id:84, class:"S10", roll:3, name:"ഫൈസാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:85, class:"S10", roll:4, name:"ഹാഫിള് മുഹമ്മദ്", team:"C", status:"hidden", role:"Member"},
-            {id:86, class:"S10", roll:5, name:"മുജ്തബ", team:"B", status:"hidden", role:"Member"},
-            {id:87, class:"S10", roll:6, name:"മുനവ്വിർ", team:"B", status:"hidden", role:"Member"},
-            {id:88, class:"S10", roll:7, name:"അദ്നാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:89, class:"S10", roll:8, name:"അമൻ", team:"A", status:"hidden", role:"Member"},
-            {id:90, class:"S10", roll:9, name:"അർശാദ്", team:"A", status:"hidden", role:"Member"},
-            {id:91, class:"S10", roll:10, name:"അശ്ഫാഖ്", team:"A", status:"hidden", role:"Member"},
-            {id:92, class:"S10", roll:11, name:"ബിശ്റുൽ ഹാഫി", team:"B", status:"hidden", role:"Member"},
-            {id:93, class:"S10", roll:12, name:"ഇമാദുദ്ദീൻ", team:"A", status:"hidden", role:"Member"},
-            {id:94, class:"S10", roll:13, name:"മുഹമ്മദ് കെ", team:"B", status:"hidden", role:"Member"},
-            {id:95, class:"S10", roll:14, name:"നഈം പി", team:"C", status:"hidden", role:"Member"},
-            {id:96, class:"S10", roll:15, name:"മുഹമ്മദ് ഒ", team:"A", status:"hidden", role:"Member"},
-            {id:97, class:"S10", roll:16, name:"റയ്യാൻ സി കെ", team:"C", status:"hidden", role:"Member"},
-            {id:98, class:"S10", roll:17, name:"റയ്യാൻ കെ എസ്", team:"C", status:"hidden", role:"Member"},
-            {id:99, class:"S10", roll:18, name:"സൽമാൻ പി പി", team:"A", status:"hidden", role:"Member"},
-            {id:100, class:"S10", roll:19, name:"യാസീൻ", team:"B", status:"hidden", role:"Member"},
+            {id:82, class:"S10", roll:1, name:"Ahmed Miqdad V K", team:"C", status:"hidden", role:"Member"},
+            {id:83, class:"S10", roll:2, name:"Fahad Musthafa", team:"A", status:"hidden", role:"Member"},
+            {id:84, class:"S10", roll:3, name:"Fayzan Haneef K M P", team:"C", status:"hidden", role:"Member"},
+            {id:85, class:"S10", roll:4, name:"Hafiz Muhammed", team:"C", status:"hidden", role:"Member"},
+            {id:86, class:"S10", roll:5, name:"Muhammad Mujthaba K", team:"B", status:"hidden", role:"Member"},
+            {id:87, class:"S10", roll:6, name:"Muhammad Munawir V P", team:"B", status:"hidden", role:"Member"},
+            {id:88, class:"S10", roll:7, name:"Muhammed Adinan K P", team:"C", status:"hidden", role:"Member"},
+            {id:89, class:"S10", roll:8, name:"Muhammed Aman M", team:"A", status:"hidden", role:"Member"},
+            {id:90, class:"S10", roll:9, name:"Muhammed Arshad M K", team:"A", status:"hidden", role:"Member"},
+            {id:91, class:"S10", roll:10, name:"Muhammed Ashfaque P C P", team:"A", status:"hidden", role:"Member"},
+            {id:92, class:"S10", roll:11, name:"Muhammed Bishrul Hafi", team:"B", status:"hidden", role:"Member"},
+            {id:93, class:"S10", roll:12, name:"Muhammed Imadudeen", team:"A", status:"hidden", role:"Member"},
+            {id:94, class:"S10", roll:13, name:"Muhammed K", team:"B", status:"hidden", role:"Member"},
+            {id:95, class:"S10", roll:14, name:"Muhammed Naeem P", team:"C", status:"hidden", role:"Member"},
+            {id:96, class:"S10", roll:15, name:"Muhammed O", team:"A", status:"hidden", role:"Member"},
+            {id:97, class:"S10", roll:16, name:"Muhammed Rayyan C K", team:"C", status:"hidden", role:"Member"},
+            {id:98, class:"S10", roll:17, name:"Muhammed Rayyan K S", team:"C", status:"hidden", role:"Member"},
+            {id:99, class:"S10", roll:18, name:"Muhammed Salman P P", team:"A", status:"hidden", role:"Member"},
+            {id:100, class:"S10", roll:19, name:"Muhammed Yaseen M K", team:"B", status:"hidden", role:"Member"},
 
-            // I1 CLASS
-            {id:101, class:"i1", roll:1, name:"അബ്ദുല്ല അൻസാരി", team:"B", status:"hidden", role:"Member"},
-            {id:102, class:"i1", roll:2, name:"അഹ്മദ് റസ", team:"A", status:"hidden", role:"Member"},
-            {id:103, class:"i1", roll:3, name:"ആമിർ", team:"B", status:"hidden", role:"Member"},
-            {id:104, class:"i1", roll:4, name:"ഹാമിദ്", team:"C", status:"hidden", role:"Member"},
-            {id:105, class:"i1", roll:5, name:"റാസി", team:"A", status:"hidden", role:"Member"},
-            {id:106, class:"i1", roll:6, name:"സിനാൻ സി", team:"B", status:"hidden", role:"Member"},
-            {id:107, class:"i1", roll:7, name:"അബ്സം", team:"C", status:"hidden", role:"Member"},
-            {id:108, class:"i1", roll:8, name:"ഫസീഹ്", team:"A", status:"hidden", role:"Member"},
-            {id:109, class:"i1", roll:9, name:"ഹഫിയ്യ", team:"B", status:"hidden", role:"Member"},
-            {id:110, class:"i1", roll:10, name:"ജുറൈജ്", team:"B", status:"hidden", role:"Member"},
-            {id:111, class:"i1", roll:11, name:"മുഹമ്മദ് കെ", team:"C", status:"hidden", role:"Member"},
-            {id:112, class:"i1", roll:12, name:"മുഹമ്മദ് എം വി", team:"A", status:"hidden", role:"Member"},
-            {id:113, class:"i1", roll:13, name:"നജ്വാൻ", team:"B", status:"hidden", role:"Member"},
-            {id:114, class:"i1", roll:14, name:"സബീഹ്", team:"B", status:"hidden", role:"Member"},
-            {id:115, class:"i1", roll:15, name:"സഫ്വാൻ", team:"C", status:"hidden", role:"Member"},
-            {id:116, class:"i1", roll:16, name:"ശമ്മാസ്", team:"C", status:"hidden", role:"Member"},
-            {id:117, class:"i1", roll:17, name:"വസീം", team:"B", status:"hidden", role:"Member"},
-            {id:118, class:"i1", roll:18, name:"ശഹ്സാദ്", team:"A", status:"hidden", role:"Member"},
-            {id:119, class:"i1", roll:19, name:"ഉമർ ഉബൈബ്", team:"C", status:"hidden", role:"Member"},
-            {id:120, class:"i1", roll:20, name:"സൈദ് മുഹമ്മദ്", team:"A", status:"hidden", role:"Member"}
+            // i1 CLASS
+            {id:101, class:"i1", roll:1, name:"Abdullah Ansari", team:"B", status:"hidden", role:"Member"},
+            {id:102, class:"i1", roll:2, name:"Ahmed Raza", team:"A", status:"hidden", role:"Member"},
+            {id:103, class:"i1", roll:3, name:"Amir Muhammed Ashraf", team:"B", status:"hidden", role:"Member"},
+            {id:104, class:"i1", roll:4, name:"Hamid", team:"C", status:"hidden", role:"Member"},
+            {id:105, class:"i1", roll:5, name:"Muhammad Razi P", team:"A", status:"hidden", role:"Member"},
+            {id:106, class:"i1", roll:6, name:"Muhammad Sinan C", team:"B", status:"hidden", role:"Member"},
+            {id:107, class:"i1", roll:7, name:"Muhammed Absam Shuhaib P V", team:"C", status:"hidden", role:"Member"},
+            {id:108, class:"i1", roll:8, name:"Muhammed Faseeh K C", team:"A", status:"hidden", role:"Member"},
+            {id:109, class:"i1", roll:9, name:"Muhammed Hafiyy", team:"B", status:"hidden", role:"Member"},
+            {id:110, class:"i1", roll:10, name:"Muhammed Juraij P M", team:"B", status:"hidden", role:"Member"},
+            {id:111, class:"i1", roll:11, name:"Muhammed K", team:"C", status:"hidden", role:"Member"},
+            {id:112, class:"i1", roll:12, name:"Muhammed M V", team:"A", status:"hidden", role:"Member"},
+            {id:113, class:"i1", roll:13, name:"Muhammed Najwan A P", team:"B", status:"hidden", role:"Member"},
+            {id:114, class:"i1", roll:14, name:"Muhammed Sabeeh T A", team:"B", status:"hidden", role:"Member"},
+            {id:115, class:"i1", roll:15, name:"Muhammed Safwan P M", team:"C", status:"hidden", role:"Member"},
+            {id:116, class:"i1", roll:16, name:"Muhammed Shammas", team:"C", status:"hidden", role:"Member"},
+            {id:117, class:"i1", roll:17, name:"Muhammed Vaseem M", team:"B", status:"hidden", role:"Member"},
+            {id:118, class:"i1", roll:18, name:"Shahzad Shafeekh", team:"A", status:"hidden", role:"Member"},
+            {id:119, class:"i1", roll:19, name:"Umar Ubaib", team:"C", status:"hidden", role:"Member"},
+            {id:120, class:"i1", roll:20, name:"Zaid Muhammed V K", team:"A", status:"hidden", role:"Member"}
         ];
 
         function uploadInitialData() {
             database.ref('students').set(studentsData)
-            .then(() => alert('ഒഫീഷ്യൽ ലിസ്റ്റ് വിജയകരമായി ഡാറ്റാബേസിലേക്ക് അപ്‌ലോഡ് ചെയ്തു!'))
+            .then(() => alert('Official list successfully uploaded to database!'))
             .catch(err => alert('Error: ' + err.message));
         }
 
@@ -288,59 +292,102 @@
             document.getElementById('admin-view').classList.add('hidden');
         }
 
+        let selectedClassVal = "";
+        let selectedRollVal = "";
+
         function initKiosk() {
             hideAll();
             document.getElementById('kiosk-view').classList.remove('hidden');
+            renderClassButtons(); // ക്ലാസ് ബട്ടണുകൾ ലോഡ് ചെയ്യുന്നു
         }
 
-        function updateRollNumbers() {
-            let selectedClass = document.getElementById('kiosk-class').value;
-            let rollSelect = document.getElementById('kiosk-roll');
-            rollSelect.innerHTML = '<option value="">-- Select Roll No --</option>';
+        function renderClassButtons() {
+            const classes = ["S5", "S6", "S7", "S8", "S9", "S10", "i1"];
+            let container = document.getElementById('class-buttons');
+            container.innerHTML = "";
+            classes.forEach(cls => {
+                let btn = document.createElement('button');
+                btn.className = 'opt-btn';
+                btn.innerText = cls;
+                btn.onclick = () => selectClass(cls, btn);
+                container.appendChild(btn);
+            });
             
-            if(!selectedClass) return;
+            // റീസെറ്റ് ചെയ്യുന്നു
+            selectedClassVal = "";
+            selectedRollVal = "";
+            document.getElementById('roll-buttons').innerHTML = '<p style="color:#64748b; font-size:0.9em;">(Please select a class first)</p>';
+            document.getElementById('reveal-btn').style.display = 'none';
+        }
 
+        function selectClass(cls, btnElement) {
+            selectedClassVal = cls;
+            selectedRollVal = "";
+            
+            // തിരഞ്ഞെടുത്ത ക്ലാസ് ഹൈലൈറ്റ് ചെയ്യാൻ
+            document.querySelectorAll('#class-buttons .opt-btn').forEach(b => b.classList.remove('selected'));
+            btnElement.classList.add('selected');
+            document.getElementById('reveal-btn').style.display = 'none';
+
+            let rollContainer = document.getElementById('roll-buttons');
+            rollContainer.innerHTML = '<span style="color:white;">Loading...</span>';
+
+            // വേഗത്തിൽ റോൾ നമ്പറുകൾ കൊണ്ടുവരുന്നു
             database.ref('students').once('value', snapshot => {
                 let rollsAdded = [];
                 snapshot.forEach(child => {
                     let s = child.val();
-                    if(s.class === selectedClass && s.status === "hidden") {
-                        if(!rollsAdded.includes(s.roll)) {
-                            rollsAdded.push(s.roll);
-                        }
+                    if(s.class === cls && s.status === "hidden") {
+                        if(!rollsAdded.includes(s.roll)) rollsAdded.push(s.roll);
                     }
                 });
                 
                 rollsAdded.sort((a, b) => a - b);
+                rollContainer.innerHTML = "";
                 
+                if(rollsAdded.length === 0) {
+                    rollContainer.innerHTML = '<p style="color:#ef4444;">All students in this class are revealed!</p>';
+                    return;
+                }
+
                 rollsAdded.forEach(rollNo => {
-                    let opt = document.createElement('option');
-                    opt.value = rollNo;
-                    opt.innerText = "Roll No: " + rollNo;
-                    rollSelect.appendChild(opt);
+                    let btn = document.createElement('button');
+                    btn.className = 'opt-btn';
+                    btn.innerText = rollNo;
+                    btn.onclick = () => selectRoll(rollNo, btn);
+                    rollContainer.appendChild(btn);
                 });
             });
         }
 
+        function selectRoll(rollNo, btnElement) {
+            selectedRollVal = rollNo;
+            document.querySelectorAll('#roll-buttons .opt-btn').forEach(b => b.classList.remove('selected'));
+            btnElement.classList.add('selected');
+            
+            // റോൾ നമ്പർ സെലക്ട് ചെയ്താലുടൻ REVEAL ബട്ടൺ കാണിക്കുന്നു
+            document.getElementById('reveal-btn').style.display = 'block';
+        }
+
         function submitKiosk() {
-            let selectedClass = document.getElementById('kiosk-class').value;
-            let rollNo = document.getElementById('kiosk-roll').value;
-            if(!rollNo) return alert("ദയവായി റോൾ നമ്പർ സെലക്ട് ചെയ്യുക!");
+            if(!selectedClassVal || !selectedRollVal) return alert("Please select Class and Roll No!");
+
+            document.getElementById('reveal-btn').innerText = "PROCLAIMING... ⏳";
 
             database.ref('students').once('value', snapshot => {
                 let updates = {};
                 snapshot.forEach(child => {
                     let s = child.val();
-                    if(s.class === selectedClass && s.roll == rollNo) {
+                    if(s.class === selectedClassVal && s.roll == selectedRollVal) {
                         updates[child.key + '/status'] = "revealed";
                     }
                 });
                 
                 database.ref('students').update(updates)
                 .then(() => {
-                    alert("നിങ്ങളുടെ ഗ്രൂപ്പ് വലിയ സ്ക്രീനിൽ പ്രഖ്യാപിച്ചിരിക്കുന്നു! 🎉");
-                    document.getElementById('kiosk-roll').value = "";
-                    updateRollNumbers();
+                    document.getElementById('reveal-btn').innerText = "REVEAL MY TEAM 🎉";
+                    // അടുത്ത ആൾക്ക് വേഗത്തിൽ ചെയ്യാൻ ഉടൻ തന്നെ സ്ക്രീൻ റീസെറ്റ് ചെയ്യുന്നു
+                    renderClassButtons();
                 });
             });
         }
@@ -365,16 +412,13 @@
 
                 listToRender.forEach(s => {
                     let li = document.createElement('li');
-                    let roleText = s.role !== "Member" ? ` [${s.role}]` : "";
-                    li.innerText = `${s.name}${roleText}`;
+                   // റോൾ (Leader/Asst) കാണിക്കുന്നത് ഒഴിവാക്കി, പേര് മാത്രം കാണിക്കുന്നു
+                    li.innerText = s.name;
                     
                     let span = document.createElement('span');
                     span.className = "class-tag";
                     span.innerText = s.class;
                     li.appendChild(span);
-
-                    if(s.role === "Leader") li.className = "leader";
-                    if(s.role === "Asst-Leader") li.className = "asst-leader";
 
                     document.getElementById('team-' + s.team).appendChild(li);
                 });
@@ -421,11 +465,11 @@
         function assignRole() {
             let key = document.getElementById('admin-student-select').value;
             let role = document.getElementById('admin-role-select').value;
-            if(!key) return alert("ദയവായി ഒരു വിദ്യാർത്ഥിയെ സെലക്ട് ചെയ്യുക!");
+            if(!key) return alert("Please select a student!");
 
             database.ref('students/' + key).update({ role: role })
             .then(() => {
-                alert("സ്ഥാനം വിജയകരമായി അപ്ഡേറ്റ് ചെയ്തു!");
+                alert("Role successfully updated!");
             });
         }
     </script>
