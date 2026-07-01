@@ -58,6 +58,38 @@
         .hidden { display: none !important; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popUp { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* പുതിയ കിയോസ്ക് ബട്ടൺ ഡിസൈനുകൾ */
+.button-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+.grid-btn {
+    background: transparent;
+    border: 2px solid #3b82f6;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: 0.3s;
+    min-width: 50px;
+}
+.grid-btn:hover { background: #1e3a8a; }
+.grid-btn.selected {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 0 10px #3b82f6;
+}
+.roll-btn { border-color: #10b981; }
+.roll-btn:hover { background: #064e3b; }
+.roll-btn.selected {
+    background: #10b981;
+    box-shadow: 0 0 10px #10b981;
+}
     </style>
 </head>
 <body>
@@ -97,20 +129,28 @@
     </div>
 
     <div id="kiosk-view" class="hidden">
-        <div class="kiosk-form" style="max-width: 600px;">
-            <h2>Dulce Dia - Select Details</h2>
-            
-            <label>1. Select Your Class:</label>
-            <div id="class-buttons" class="grid-btns"></div>
-            
-            <label>2. Select Your Roll No:</label>
-            <div id="roll-buttons" class="grid-btns">
-                <p style="color:#64748b; font-size:0.9em;">(Please select a class first)</p>
-            </div>
-            
-            <button id="reveal-btn" class="btn-submit" style="display:none;" onclick="submitKiosk()">REVEAL MY TEAM 🎉</button>
+    <div class="kiosk-form" style="max-width: 700px; text-align: center;">
+        <h2 style="color: #16a34a; margin-bottom: 30px;">Dulce Dia - Select Details</h2>
+        
+        <label style="font-size: 1.2em; margin-bottom: 15px; color: #fff;">Select Your Class</label>
+        <div id="class-buttons" class="button-grid">
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('S5', this)">S5</button>
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('S6', this)">S6</button>
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('S7', this)">S7</button>
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('S8', this)">S8</button>
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('S9', this)">S9</button>
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('S10', this)">S10</button>
+            <button class="grid-btn class-btn" onclick="selectClassKiosk('i1', this)">i1</button>
         </div>
+        
+        <label style="font-size: 1.2em; margin-top: 20px; margin-bottom: 15px; color: #fff;">Select Your Roll Number</label>
+        <div id="roll-buttons" class="button-grid">
+            <p style="color:#64748b;">(Please select a class first)</p>
+        </div>
+        
+        <button class="btn-submit" onclick="submitKioskManual()" style="margin-top: 20px; padding: 15px 30px; font-size: 1.3em; width: auto; border-radius: 30px; min-width: 250px;">Reveal My Team</button>
     </div>
+</div>
 
     <div id="admin-view" class="hidden">
         <div class="kiosk-form" style="max-width: 550px;">
@@ -369,19 +409,35 @@
             document.getElementById('reveal-btn').style.display = 'block';
         }
 
-        function submitKiosk() {
-            if(!selectedClassVal || !selectedRollVal) return alert("Please select Class and Roll No!");
+        // പുതിയ ഫംഗ്‌ഷൻ (മാനുവലായി ബട്ടൺ അമർത്തേണ്ട രീതി)
+function submitKioskManual() {
+    if(!selectedClassVal || !selectedRollVal) {
+        alert("Please select both Class and Roll Number!");
+        return;
+    }
 
-            document.getElementById('reveal-btn').innerText = "PROCLAIMING... ⏳";
+    // ബട്ടൺ ടെക്സ്റ്റ് മാറ്റുന്നു
+    let btn = document.getElementById('reveal-btn');
+    btn.innerText = "PROCLAIMING... ⏳";
 
-            database.ref('students').once('value', snapshot => {
-                let updates = {};
-                snapshot.forEach(child => {
-                    let s = child.val();
-                    if(s.class === selectedClassVal && s.roll == selectedRollVal) {
-                        updates[child.key + '/status'] = "revealed";
-                    }
-                });
+    database.ref('students').once('value', snapshot => {
+        let updates = {};
+        snapshot.forEach(child => {
+            let s = child.val();
+            if(s.class === selectedClassVal && s.roll == selectedRollVal) {
+                updates[child.key + '/status'] = "revealed";
+            }
+        });
+        
+        database.ref('students').update(updates)
+        .then(() => {
+            alert("Team Revealed!");
+            // വീണ്ടും പഴയ സ്റ്റേറ്റിലേക്ക് കൊണ്ടുവരുന്നു
+            btn.innerText = "REVEAL MY TEAM 🎉";
+            renderClassButtons(); 
+        });
+    });
+}
                 
                 database.ref('students').update(updates)
                 .then(() => {
