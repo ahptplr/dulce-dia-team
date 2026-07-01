@@ -45,7 +45,33 @@
         .kiosk-form { max-width: 450px; margin: 40px auto; background: #1e293b; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border: 1px solid #334155; text-align: left; }
         .kiosk-form h2 { text-align: center; color: #16a34a; margin-top: 0; margin-bottom: 30px; }
         label { font-weight: bold; color: #94a3b8; display: block; margin-top: 15px; }
-        select, button { width: 100%; padding: 14px; margin-top: 8px; border-radius: 6px; border: 1px solid #475569; font-size: 1.1em; background: #0f172a; color: white; box-sizing: border-box; }
+        /* സെലക്ട് ഡ്രോപ്പ്-ഡൗണുകൾക്ക് മാത്രം 100% വീതി നൽകുന്നു */
+select { 
+    width: 100%; 
+    padding: 14px; 
+    margin-top: 8px; 
+    border-radius: 6px; 
+    border: 1px solid #475569; 
+    font-size: 1.1em; 
+    background: #0f172a; 
+    color: white; 
+}
+
+/* മോഡ് ബട്ടണുകൾക്ക് (Setup Menu) പ്രത്യേക സ്റ്റൈൽ */
+.btn-mode { 
+    padding: 15px 30px; 
+    font-size: 1.2em; 
+    margin: 10px auto; /* ഓട്ടോ മാർജിൻ ബട്ടണുകളെ നടുവിൽ നിർത്തുന്നു */
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    color: white; 
+    font-weight: bold; 
+    transition: 0.3s; 
+    display: block; 
+    width: 80%; /* സ്ക്രീനിന്റെ വീതിക്കനുസരിച്ച് ക്രമീകരിക്കുന്നു */
+    max-width: 500px; /* അധികം വലുതാകാതിരിക്കാൻ */
+}
         select:focus { border-color: #38bdf8; outline: none; }
         .btn-submit { background: #16a34a; border: none; color: white; font-weight: bold; cursor: pointer; margin-top: 25px; transition: 0.2s; }
         .btn-submit:hover { background: #15803d; }
@@ -410,11 +436,33 @@
         }
 
         // പുതിയ ഫംഗ്‌ഷൻ (മാനുവലായി ബട്ടൺ അമർത്തേണ്ട രീതി)
+// പഴയ ഡ്യൂപ്ലിക്കേറ്റ് ഫംഗ്ഷനുകൾ ഒഴിവാക്കി ഇത് മാത്രം നിലനിർത്തുക
 function submitKioskManual() {
     if(!selectedClassVal || !selectedRollVal) {
         alert("Please select both Class and Roll Number!");
         return;
     }
+
+    let btn = document.getElementById('reveal-btn');
+    btn.innerText = "PROCLAIMING... ⏳";
+
+    database.ref('students').once('value', snapshot => {
+        let updates = {};
+        snapshot.forEach(child => {
+            let s = child.val();
+            if(s.class === selectedClassVal && s.roll == selectedRollVal) {
+                updates[child.key + '/status'] = "revealed";
+            }
+        });
+        
+        database.ref('students').update(updates)
+        .then(() => {
+            alert("Team Revealed!");
+            btn.innerText = "REVEAL MY TEAM 🎉";
+            renderClassButtons(); 
+        });
+    });
+}
 
     // ബട്ടൺ ടെക്സ്റ്റ് മാറ്റുന്നു
     let btn = document.getElementById('reveal-btn');
